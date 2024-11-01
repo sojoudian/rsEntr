@@ -25,27 +25,16 @@ pub fn monitor_files(path: &str) {
         loop {
             match rx.recv() {
                 Ok(event) => match event {
-                    DebouncedEvent::Create(path) => {
-                        println!("File created: {:?}", path);
-                    }
-                    DebouncedEvent::Write(path) => {
-                        println!("File modified: {:?}", path);
-                    }
-                    DebouncedEvent::Remove(path) => {
-                        println!("File removed: {:?}", path);
-                    }
-                    DebouncedEvent::Rename(src, dest) => {
-                        println!("File renamed from {:?} to {:?}", src, dest);
-                    }
-                    DebouncedEvent::Error(err, path) => {
-                        eprintln!("Error: {:?} at {:?}", err, path);
-                    }
+                    DebouncedEvent::Create(path) => println!("File created: {:?}", path),
+                    DebouncedEvent::Write(path) => println!("File modified: {:?}", path),
+                    DebouncedEvent::Remove(path) => println!("File removed: {:?}", path),
+                    DebouncedEvent::Rename(src, dest) => println!("File renamed from {:?} to {:?}", src, dest),
+                    DebouncedEvent::Error(err, path) => eprintln!("Error: {:?} at {:?}", err, path),
                     _ => (),
                 },
-                Err(err) => {
-                    eprintln!("Watch error: {:?}", err);
-                }
+                Err(err) => eprintln!("Watch error: {:?}", err),
             }
         }
     });
 }
+
