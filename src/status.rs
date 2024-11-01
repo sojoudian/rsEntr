@@ -2,14 +2,14 @@
 
 use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Result, Watcher};
 use std::path::Path;
-use std::sync::mpsc::channel;
+use std::sync::mpsc::{channel, Sender};
 use std::thread;
 use std::time::Duration;
 
 /// Function to watch for file changes in a directory
 pub fn monitor_files(path: &str) {
     // Create a channel to receive the events
-    let (tx, rx) = channel();
+    let (tx, rx): (Sender<Result<Event>>, _) = channel();
 
     // Create a recommended watcher object
     let mut watcher = RecommendedWatcher::new(
