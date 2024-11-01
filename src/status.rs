@@ -1,4 +1,7 @@
+// src/status.rs
+
 use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Result, Watcher};
+use std::path::Path;
 use std::sync::mpsc::channel;
 use std::thread;
 use std::time::Duration;
@@ -17,9 +20,6 @@ pub fn monitor_files(path: &str) {
                         EventKind::Create(_) => println!("File created: {:?}", path),
                         EventKind::Modify(_) => println!("File modified: {:?}", path),
                         EventKind::Remove(_) => println!("File removed: {:?}", path),
-                        EventKind::Rename(_, dest) => {
-                            println!("File renamed to {:?}", dest)
-                        }
                         _ => (),
                     }
                 }
@@ -32,7 +32,7 @@ pub fn monitor_files(path: &str) {
 
     // Add the path to be watched (with recursive mode)
     watcher
-        .watch(path, RecursiveMode::Recursive)
+        .watch(Path::new(path), RecursiveMode::Recursive)
         .expect("Failed to watch path");
 
     println!("Monitoring file changes in directory: {}", path);
@@ -42,3 +42,4 @@ pub fn monitor_files(path: &str) {
         thread::park();
     }
 }
+
