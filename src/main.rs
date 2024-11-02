@@ -2,7 +2,7 @@ use crate::data; // Assuming necessary structs/functions are in data.rs
 use crate::status; // Assuming status handling is in status.rs
 
 fn main() {
-    // Initial setup and parsing logic similar to `entr.c`
+    //  Initial setup and parsing logic similar to `entr.c`
     println!("Starting the application...");
 
     // Example initialization logic
