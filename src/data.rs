@@ -1,3 +1,4 @@
+// src/data.rs
 pub const FILE_CHANGE_EVENT: &str = "File change detected";
 
 pub struct FileEvent {
@@ -14,8 +15,7 @@ impl FileEvent {
     }
 
     pub fn display(&self) {
-        if self.changed {
-            println!("{}: {}", FILE_CHANGE_EVENT, self.name);
-        }
+        println!("{}: {}", FILE_CHANGE_EVENT, self.name);
     }
 }
+

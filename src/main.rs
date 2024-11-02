@@ -1,17 +1,38 @@
-mod data;
-mod status;
+use crate::data; // Assuming necessary structs/functions are in data.rs
+use crate::status; // Assuming status handling is in status.rs
 
 fn main() {
-    println!("Starting the 'entr' application rewrite in Rust...");
+    // Initial setup and parsing logic similar to `entr.c`
+    println!("Starting the application...");
 
-    // Path to monitor (you can adjust this to a specific directory)
-    let path_to_watch = "."; // Current directory
-
-    // Start monitoring for file changes
-    status::monitor_files(path_to_watch);
-
-    // Prevent the main thread from exiting
-    loop {
-        std::thread::park();
+    // Example initialization logic
+    if let Err(e) = initialize() {
+        eprintln!("Initialization failed: {}", e);
+        std::process::exit(1);
     }
+
+    // Core loop or process logic
+    loop {
+        // Placeholder for actual logic from `entr.c`
+        if let Err(e) = perform_task() {
+            eprintln!("Task failed: {}", e);
+            break;
+        }
+    }
+
+    // Final cleanup
+    status::finalize();
+    println!("Application ended successfully.");
 }
+
+fn initialize() -> Result<(), String> {
+    // Replace with initialization code from `entr.c`
+    Ok(())
+}
+
+fn perform_task() -> Result<(), String> {
+    // Replace with task code from `entr.c`
+    println!("Performing task...");
+    Ok(())
+}
+
