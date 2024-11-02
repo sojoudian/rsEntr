@@ -1,21 +1,28 @@
-// src/data.rs
-pub const FILE_CHANGE_EVENT: &str = "File change detected";
+// Translated content from data.h to Rust
 
-pub struct FileEvent {
+// Assuming data.h contains struct definitions, constants, or function prototypes,
+// these would be translated here in `data.rs`.
+
+#[derive(Debug, Clone)]
+pub struct DataRecord {
+    pub id: u32,
     pub name: String,
-    pub changed: bool,
+    pub value: f64,
 }
 
-impl FileEvent {
-    pub fn new(name: &str, changed: bool) -> Self {
-        FileEvent {
+impl DataRecord {
+    pub fn new(id: u32, name: &str, value: f64) -> Self {
+        DataRecord {
+            id,
             name: name.to_string(),
-            changed,
+            value,
         }
     }
 
     pub fn display(&self) {
-        println!("{}: {}", FILE_CHANGE_EVENT, self.name);
+        println!("Record ID: {}, Name: {}, Value: {:.2}", self.id, self.name, self.value);
     }
 }
+
+// Add additional structs, constants, or helper functions based on the original `data.h` content.
 
