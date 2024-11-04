@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 notify = "6.0"
+nix = "0.26"           # For Unix system calls
+tempfile = "3.8"       # For tests only
