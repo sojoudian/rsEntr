@@ -1,8 +1,7 @@
-// Cargo.toml
 [package]
 name = "entr_app"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# If we need any specific dependencies, they will be added here.
+notify = "5.0.0-pre.15"
