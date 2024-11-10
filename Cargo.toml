@@ -4,4 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-notify = "5.0.0-pre.15"
+notify = "5.2.0"
+clap = { version = "4.0", features = ["derive"] }
