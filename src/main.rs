@@ -1,40 +1,48 @@
-mod data;
-mod status;
+// src/main.rs
+use std::env;
+use std::fs;
+use std::path::Path;
+use std::process::{Command, exit};
+use std::io;
+use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
+use std::sync::mpsc::channel;
+use std::time::Duration;
 
-use crate::data; // Assuming necessary structs/functions are in data.rs
-use crate::status; // Assuming status handling is in status.rs
-
-fn main() {
-    // Initial setup and parsing logic similar to `entr.c`
-    println!("Starting the application...");
-
-    // Example initialization logic
-    if let Err(e) = initialize() {
-        eprintln!("Initialization failed: {}", e);
-        std::process::exit(1);
+fn main() -> io::Result<()> {
+    // Initialize environment and configuration
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        eprintln!("Usage: entr_app <command>");
+        exit(1);
     }
 
-    // Core loop or process logic
+    let command = &args[1];
+
+    // Setting up a file watcher
+    let (tx, rx) = channel();
+    let mut watcher = watcher(tx, Duration::from_secs(2)).expect("Failed to initialize watcher");
+
+    // Define the path to watch
+    let path_to_watch = Path::new(".");
+    watcher.watch(path_to_watch, RecursiveMode::Recursive)
+        .expect("Failed to watch directory");
+
+    println!("Watching directory for changes...");
+
     loop {
-        // Placeholder for actual logic from `entr.c`
-        if let Err(e) = perform_task() {
-            eprintln!("Task failed: {}", e);
-            break;
+        match rx.recv() {
+            Ok(DebouncedEvent::Write(path)) => {
+                println!("File changed: {:?}", path);
+                if let Err(e) = Command::new(command).status() {
+                    eprintln!("Failed to execute command: {:?}", e);
+                }
+            }
+            Err(e) => {
+                eprintln!("watch error: {:?}", e);
+                break;
+            }
+            _ => {}
         }
     }
-
-    // Final cleanup
-    status::finalize();
-    println!("Application ended successfully.");
-}
-
-fn initialize() -> Result<(), String> {
-    // Replace with initialization code from `entr.c`
-    Ok(())
-}
-
-fn perform_task() -> Result<(), String> {
-    // Replace with task code from `entr.c`
-    println!("Performing task...");
     Ok(())
 }
