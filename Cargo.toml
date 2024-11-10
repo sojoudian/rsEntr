@@ -1,9 +1,8 @@
+// Cargo.toml
 [package]
-name = "rsEntr"
+name = "entr_app"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-notify = "6.0"
-nix = "0.26"           # For Unix system calls
-tempfile = "3.8"       # For tests only
+# If we need any specific dependencies, they will be added here.
