@@ -1,6 +1,7 @@
 use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::process::Command;
+use std::path::Path;
 
 fn main() -> notify::Result<()> {
     // Set up a channel to receive the events.
@@ -9,8 +10,8 @@ fn main() -> notify::Result<()> {
     // Create a watcher object, configured with default settings.
     let mut watcher = RecommendedWatcher::new(tx, Config::default())?;
 
-    // Start watching the current directory.
-    watcher.watch(".", RecursiveMode::Recursive)?;
+    // Start watching the current directory as a Path type.
+    watcher.watch(Path::new("."), RecursiveMode::Recursive)?;
 
     println!("Watching for changes...");
 
@@ -29,6 +30,7 @@ fn main() -> notify::Result<()> {
                 child.wait().expect("Command wasn't running");
             }
             Err(e) => println!("Watch error: {:?}", e),
+            _ => (),  // Wildcard pattern to handle any other event kinds
         }
     }
 
