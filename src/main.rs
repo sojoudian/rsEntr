@@ -1,25 +1,26 @@
-use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
-use std::process::Command;
+use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
-use std::time::Duration;
+use std::process::Command;
 
-fn main() {
+fn main() -> notify::Result<()> {
+    // Set up a channel to receive the events.
     let (tx, rx) = channel();
 
-    // Watch the current directory for file changes
-    let mut watcher = watcher(tx, Duration::from_secs(2)).expect("Failed to create file watcher");
-    watcher
-        .watch(".", RecursiveMode::Recursive)
-        .expect("Failed to start watching directory");
+    // Create a watcher object, configured with default settings.
+    let mut watcher = RecommendedWatcher::new(tx, Config::default())?;
+
+    // Start watching the current directory.
+    watcher.watch(".", RecursiveMode::Recursive)?;
 
     println!("Watching for changes...");
 
-    loop {
-        match rx.recv() {
-            Ok(DebouncedEvent::Write(path)) => {
-                println!("File changed: {:?}", path);
+    // Loop to process events.
+    for res in rx {
+        match res {
+            Ok(Event { kind: EventKind::Modify(..), paths, .. }) => {
+                println!("File changed: {:?}", paths);
 
-                // Replace with the command you want to execute on file change
+                // Run a command on file change.
                 let mut child = Command::new("echo")
                     .arg("File changed!")
                     .spawn()
@@ -28,7 +29,8 @@ fn main() {
                 child.wait().expect("Command wasn't running");
             }
             Err(e) => println!("Watch error: {:?}", e),
-            _ => (),
         }
     }
+
+    Ok(())
 }
